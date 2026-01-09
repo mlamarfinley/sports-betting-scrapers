@@ -62,7 +62,7 @@ def scrape_nba_data():
     """Trigger NBA scraper for January 2026"""
     try:
         from src.scrapers.nba import scrape_nba_month
-scrape_nba_month(season=2026, month_slug="january")
+        scrape_nba_month(season=2026, month_slug="january")
         return {"status": "success", "message": "NBA data scraped"}
     except Exception as e:
         return {"status": "error", "message": str(e)}
