@@ -44,6 +44,30 @@ def get_nba_sample():
         ]
     }
 
+
+
+@app.post("/admin/init-db")
+def init_database():
+    """Initialize database tables"""
+    try:
+        from src.database.connection import engine
+        from src.database.models import Base
+        Base.metadata.create_all(engine)
+        return {"status": "success", "message": "Database tables created"}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+@app.post("/admin/scrape-nba")
+def scrape_nba_data():
+    """Trigger NBA scraper for January 2026"""
+    try:
+        from src.scrapers.nba import scrape_nba_month
+        from src.database.connection import get_db
+        db = next(get_db())
+        scrape_nba_month(season=2026, month_slug="january", db=db)
+        return {"status": "success", "message": "NBA data scraped"}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 8000))
