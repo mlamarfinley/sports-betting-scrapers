@@ -1,6 +1,7 @@
 #!/bin/bash
-export PYTHONPATH="${PYTHONPATH}:/app"
+export PYTHONPATH="/app:${PYTHONPATH}"
 cd /app
-python init_db.py
-
-uvicorn src.api.main:app --host 0.0.0.0 --port $PORT
+echo "Initializing database..."
+python init_db.py || echo "Database already initialized"
+echo "Starting API server..."
+exec uvicorn src.api.main:app --host 0.0.0.0 --port ${PORT:-8000}
