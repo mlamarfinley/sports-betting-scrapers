@@ -46,6 +46,66 @@ def get_nba_sample():
 
 
 
+# Data endpoints for Lovable frontend
+@app.get("/nba/games")
+def get_nba_games(limit: int = 100):
+    """Get recent NBA games"""
+    try:
+        from src.database.connection import engine
+        from src.database.models import NBAGame
+        from sqlalchemy.orm import Session
+        
+        with Session(engine) as session:
+            games = session.query(NBAGame).limit(limit).all()
+            return {"status": "success", "count": len(games), "games": [{
+                "id": g.id,
+                "date": g.date.isoformat() if g.date else None,
+                "home_team": g.home_team,
+                "away_team": g.away_team,
+                "home_score": g.home_score,
+                "away_score": g.away_score
+            } for g in games]}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+@app.get("/nba/teams")
+def get_nba_teams():
+    """Get all NBA teams"""
+    try:
+        from src.database.connection import engine
+        from src.database.models import NBATeam
+        from sqlalchemy.orm import Session
+        
+        with Session(engine) as session:
+            teams = session.query(NBATeam).all()
+            return {"status": "success", "count": len(teams), "teams": [{
+                "id": t.id,
+                "name": t.name,
+                "abbreviation": t.abbreviation
+            } for t in teams]}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+@app.get("/nba/players")
+def get_nba_players(limit: int = 100):
+    """Get NBA players"""
+    try:
+        from src.database.connection import engine
+        from src.database.models import NBAPlayer
+        from sqlalchemy.orm import Session
+        
+        with Session(engine) as session:
+            players = session.query(NBAPlayer).limit(limit).all()
+            return {"status": "success", "count": len(players), "players": [{
+                "id": p.id,
+                "name": p.name,
+                "team": p.team,
+                "position": p.position
+            } for p in players]}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
 @app.post("/admin/init-db")
 def init_database():
     """Initialize database tables"""
