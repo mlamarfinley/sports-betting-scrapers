@@ -4,4 +4,4 @@ cd /app
 echo "Initializing database..."
 python init_db.py || echo "Database already initialized"
 echo "Starting API server..."
-exec python -m uvicorn src.api.main:app --host 0.0.0.0 --port ${PORT:-8000}
+exec uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}
