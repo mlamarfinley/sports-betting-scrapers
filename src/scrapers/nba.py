@@ -160,5 +160,97 @@ def scrape_current_month():
     scrape_nba_month(season, month_slug)
 
 
+def scrape_upcoming_days(days=4):
+    """
+    Scrape NBA games for today and the next N days.
+    This matches what Underdog Fantasy shows.
+    """
+    from datetime import timedelta
+    
+    print(f"Scraping NBA games for the next {days} days...")
+    
+    now = datetime.now()
+    season = now.year if now.month > 6 else now.year
+    
+    with Session(engine) as db:
+        for day_offset in range(days):
+            target_date = now + timedelta(days=day_offset)
+            date_str = target_date.strftime('%Y-%m-%d')
+            
+            # Basketball-Reference uses format: /boxscores/?month=01&day=10&year=2026
+            url = f"{BR_BASE}/boxscores/?month={target_date.month:02d}&day={target_date.day:02d}&year={target_date.year}"
+            print(f"Fetching games for {date_str}...")
+            
+            try:
+                response = requests.get(url, timeout=10, headers=HEADERS)
+                response.raise_for_status()
+                soup = BeautifulSoup(response.text, 'html.parser')
+                
+                # Find all game boxes
+                game_divs = soup.find_all('div', class_='game_summary')
+                print(f"Found {len(game_divs)} games for {date_str}")
+                
+                for game_div in game_divs:
+                    try:
+                        # Extract game link
+                        link = game_div.find('a', href=True)
+                        if not link:
+                            continue
+                        
+                        game_url = BR_BASE + link['href']
+                        game_id = link['href'].split('/')[-1].replace('.html', '')
+                        
+                        # Check if already scraped
+                        existing = db.query(NBAGame).filter(NBAGame.game_id == game_id).first()
+                        if existing:
+                            print(f"  {game_id} already scraped, skipping")
+                            continue
+                        
+                        # Extract teams
+                        teams = game_div.find_all('a', itemprop='name')
+                        if len(teams) < 2:
+                            continue
+                        
+                        away_team = teams[0].get_text(strip=True)
+                        home_team = teams[1].get_text(strip=True)
+                        
+                        # Extract scores (if game has finished)
+                        scores = game_div.find_all('td', class_='right')
+                        away_score = None
+                        home_score = None
+                        if len(scores) >= 2:
+                            try:
+                                away_score = int(scores[0].get_text(strip=True))
+                                home_score = int(scores[1].get_text(strip=True))
+                            except:
+                                pass  # Game hasn't finished yet
+                        
+                        # Create game record
+                        game = NBAGame(
+                            game_id=game_id,
+                            date=target_date.date(),
+                            home_team=home_team,
+                            away_team=away_team,
+                            home_score=home_score,
+                            away_score=away_score,
+                            season=season
+                        )
+                        db.add(game)
+                        print(f"  ✓ Added {away_team} @ {home_team}")
+                        
+                    except Exception as e:
+                        print(f"  Error processing game: {e}")
+                        continue
+                
+                db.commit()
+                time.sleep(2)  # Rate limiting
+                
+            except Exception as e:
+                print(f"Error fetching {date_str}: {e}")
+                continue
+    
+    print("✓ Finished scraping upcoming games")
+
+
 if __name__ == "__main__":
     scrape_current_month()
