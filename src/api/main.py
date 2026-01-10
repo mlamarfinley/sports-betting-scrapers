@@ -119,10 +119,10 @@ def init_database():
 
 @app.post("/admin/scrape-nba")
 def scrape_nba_data():
-    """Trigger NBA scraper for January 2026"""
-    try:
-        from src.scrapers.nba import scrape_nba_month
-        scrape_nba_month(season=2026, month_slug="january")
+    """Trigger NBA scraper for today + next 3 days"""    try:
+        
+        from src.scrapers.nba import scrape_upcoming_days
+                scrape_upcoming_days(4)
         return {"status": "success", "message": "NBA data scraped"}
     except Exception as e:
         return {"status": "error", "message": str(e)}
