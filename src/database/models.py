@@ -19,6 +19,24 @@ class NBAGame(Base):
     season = Column(Integer)
     scraped_at = Column(DateTime(timezone=True), server_default=func.now())
 
+class NBATeam(Base):
+    __tablename__ = "nba_teams"
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(100))
+    abbreviation = Column(String(10))
+    scraped_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class NBAPlayer(Base):
+    __tablename__ = "nba_players"
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(100))
+    team = Column(String(50))
+    position = Column(String(10))
+    scraped_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
 
 class NBAPlayerStat(Base):
     __tablename__ = "nba_player_stats"
