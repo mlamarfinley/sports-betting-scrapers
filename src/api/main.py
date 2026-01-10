@@ -120,7 +120,7 @@ def init_database():
 @app.post("/admin/scrape-nba")
 def scrape_nba_data():
     """Trigger NBA scraper for today + next 3 days"""
-        try:
+            try:
         
         from src.scrapers.nba import scrape_upcoming_days
                 scrape_upcoming_days(4)
