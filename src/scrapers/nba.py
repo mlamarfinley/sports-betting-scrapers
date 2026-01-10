@@ -12,6 +12,11 @@ from src.database.models import NBAGame, NBAPlayerStat
 
 BR_BASE = "https://www.basketball-reference.com"
 
+# Headers to avoid 403 errors
+HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+}
+
 
 def scrape_nba_month(season: int, month_slug: str):
     """
@@ -22,7 +27,7 @@ def scrape_nba_month(season: int, month_slug: str):
     print(f"Fetching {url}...")
     
     try:
-        response = requests.get(url, timeout=10)
+        response = requests.get(url, timeout=10, headers=HEADERS)
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
         
@@ -54,7 +59,7 @@ def scrape_single_game(url: str, season: int, db: Session):
         return
     
     try:
-        response = requests.get(url, timeout=10)
+        response = requests.get(url, timeout=10, headers=HEADERS)
         response.raise_for_status()
         html = response.text
         
