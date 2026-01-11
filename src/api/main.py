@@ -123,24 +123,21 @@ try:
     from src.scrapers.nba import scrape_nba_month
         from datetime import datetime
         from dateutil.relativedelta import relativedelta
-        
+
         # Scrape past 4 days of data
         now = datetime.now()
         month_map = {
-            1: 'january', 2: 'february', 3: 'march', 4: 'april',
+                        1: 'january', 2: 'february', 3: 'march', 4: 'april',
             5: 'may', 6: 'june', 7: 'july', 8: 'august',
             9: 'september', 10: 'october', 11: 'november', 12: 'december'
         }
-        
+
         for i in range(4):
             target_date = now - relativedelta(days=i)
             month_slug = month_map[target_date.month]
             target_season = target_date.year if target_date.month > 6 else target_date.year
             scrape_nba_month(target_season, month_slug)
+
         return {"status": "success", "message": "NBA data scraped"}
     except Exception as e:
         return {"status": "error", "message": str(e)}
-if __name__ == "__main__":
-    import uvicorn
-    port = int(os.getenv("PORT", 8000))
-    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
