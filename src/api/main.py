@@ -91,7 +91,6 @@ def get_nba_players(limit: int = 100):
     """Get NBA players"""
     try:
         from src.database.connection import engine
-        from src.database.models import NBAPlayer
         from sqlalchemy.orm import Session
         
         with Session(engine) as session:
@@ -119,13 +118,13 @@ def init_database():
 
 @app.post("/admin/scrape-nba")
 def scrape_nba_data():
-    """Trigger NBA scraper for the past 4 months"""            try:
+    """Trigger NBA scraper for the past 4 days"""            try:
         
     from src.scrapers.nba import scrape_nba_month
         from datetime import datetime
         from dateutil.relativedelta import relativedelta
         
-        # Scrape past 4 months of data
+        # Scrape past 4 days of data
         now = datetime.now()
         month_map = {
             1: 'january', 2: 'february', 3: 'march', 4: 'april',
@@ -134,7 +133,7 @@ def scrape_nba_data():
         }
         
         for i in range(4):
-            target_date = now - relativedelta(months=i)
+            target_date = now - relativedelta(days=i)
             month_slug = month_map[target_date.month]
             target_season = target_date.year if target_date.month > 6 else target_date.year
             scrape_nba_month(target_season, month_slug)
