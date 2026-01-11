@@ -121,8 +121,8 @@ def scrape_nba_data():
         """Trigger NBA scraper for the past 4 days"""
     try:    
         from src.scrapers.nba import scrape_nba_month
-            from datetime import datetime
-            from dateutil.relativedelta import relativedelta
+        from datetime import datetime
+             dateutil.relativedelta import relativedelta
     
             # Scrape past 4 days of data
             now = datetime.now()
