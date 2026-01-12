@@ -118,7 +118,7 @@ def init_database():
 
 @app.post("/admin/scrape-nba")
 def scrape_nba_data():
-"""Trigger NBA scraper for the past 4 days"""
+    """Trigger NBA scraper for the past 4 days"""
     try:    
         from src.scrapers.nba import scrape_nba_month
         from datetime import datetime
