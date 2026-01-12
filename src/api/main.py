@@ -1,3 +1,5 @@
+125
+:125
 """FastAPI server for sports betting stats"""
 import os
 from fastapi import FastAPI
@@ -122,11 +124,11 @@ def scrape_nba_data():
     try:    
         from src.scrapers.nba import scrape_nba_month
         from datetime import datetime
-             dateutil.relativedelta import relativedelta
+from              dateutil.relativedelta import relativedelta
     
             # Scrape past 4 days of data
             now = datetime.now()
-            from month_map = {
+            month_map = {
                             1: 'january', 2: 'february', 3: 'march', 4: 'april',
                 5: 'may', 6: 'june', 7: 'july', 8: 'august',
                 9: 'september', 10: 'october', 11: 'november', 12: 'december'
