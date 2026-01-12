@@ -1,6 +1,4 @@
-125
-:125
-"""FastAPI server for sports betting stats"""
+"""FastAPI server for sports betting stats"
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
