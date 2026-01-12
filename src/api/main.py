@@ -34,7 +34,7 @@ def health_check():
 
 @app.get("/nba/stats/sample")
 def get_nba_sample():
-    """Sample NBA endpoint - will be replaced with real data"""
+    """Get sample NBA endpoint data"""
     return {
         "player": "LeBron James",
         "recent_games": [
@@ -118,7 +118,7 @@ def init_database():
 
 @app.post("/admin/scrape-nba")
 def scrape_nba_data():
-        """rigger NBA scraper for the past 4 days""
+        Triggerger NBA scraper for the past 4 days""
     try:    
         from src.scrapers.nba import scrape_nba_month
         from datetime import datetime
