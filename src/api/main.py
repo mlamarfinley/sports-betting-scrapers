@@ -1,5 +1,4 @@
-"""FastAPI server for sports betting stats"""
-import os
+"""FastAPI server for sports betting stats"""import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
@@ -92,6 +91,7 @@ def get_nba_players(limit: int = 100):
     try:
         from src.database.connection import engine
         from sqlalchemy.orm import Session
+                from src.database.models import NBAPlayer
         
         with Session(engine) as session:
             players = session.query(NBAPlayer).limit(limit).all()
@@ -118,8 +118,7 @@ def init_database():
 
 @app.post("/admin/scrape-nba")
 def scrape_nba_data():
-    """Trigger NBA scraper for the past 4 days"""
-    try:    
+    """Trigger NBA scraper for the next 4 days"""    try:    
         from src.scrapers.nba import scrape_nba_month
         from datetime import datetime
         from dateutil.relativedelta import relativedelta
@@ -133,7 +132,7 @@ def scrape_nba_data():
             }
     
             for i in range(4):
-                target_date = now - relativedelta(days=i)
+                target_date = now+- relativedelta(days=i)
                 month_slug = month_map[target_date.month]
                 target_season = target_date.year if target_date.month > 6 else target_date.year
                 scrape_nba_month(target_season, month_slug)
