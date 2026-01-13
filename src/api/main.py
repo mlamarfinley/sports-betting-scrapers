@@ -1,4 +1,5 @@
-"""FastAPI server for sports betting stats"""import os
+"""FastAPI server for sports betting stats"""
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
