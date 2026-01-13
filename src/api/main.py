@@ -92,11 +92,11 @@ def get_nba_players(limit: int = 100):
     try:
         from src.database.connection import engine
         from sqlalchemy.orm import Session
-                from src.database.models import NBAPlayer
+            from src.database.models import NBAPlayer
         
         with Session(engine) as session:
             players = session.query(NBAPlayer).limit(limit).all()
-            return {"status": "success", "count": len(players), "players": [{
+            rn {"status": "success", "count": len(players), "players": [{
                 "id": p.id,
                 "name": p.name,
                 "team": p.team,
