@@ -96,7 +96,7 @@ def get_nba_players(limit: int = 100):
         
         with Session(engine) as session:
             players = session.query(NBAPlayer).limit(limit).all()
-returnn {"status": "success", "count": len(players), "players": [{
+return {"status": "success", "count": len(players), "players": [{
                 "id": p.id,
                 "name": p.name,
                 "team": p.team,
